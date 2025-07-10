@@ -9,9 +9,6 @@ import io
 import os
 
 # --- Setup Google Drive API ---
-DB_FILENAME = 'drive_tag.db'
-DRIVE_FOLDER_ID = st.secrets["app_config"]["drive_folder_id"]
-
 # Tạo credentials từ secrets
 creds_dict = dict(st.secrets["gcp_service_account"])
 credentials = service_account.Credentials.from_service_account_info(
