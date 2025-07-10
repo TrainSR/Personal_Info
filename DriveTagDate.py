@@ -7,18 +7,20 @@ import pandas as pd
 import tempfile
 import io
 import os
+import json
 
-# --- Setup Google Drive API from Secrets ---
+# --- Setup Google Drive API ---
 DB_FILENAME = 'drive_tag.db'
-
-# Đọc credentials và folder ID từ st.secrets
-credentials = service_account.Credentials.from_service_account_info(
-    st.secrets["gcp_service_account"],
-    scopes=["https://www.googleapis.com/auth/drive"]
-)
-drive_service = build("drive", "v3", credentials=credentials)
-
 DRIVE_FOLDER_ID = st.secrets["app_config"]["drive_folder_id"]
+
+# Tạo credentials từ chuỗi JSON của service account
+gcp_info = st.secrets["gcp_service_account"]
+credentials = service_account.Credentials.from_service_account_info(
+    json.loads(json.dumps(gcp_info)),  # Ép kiểu để đảm bảo đúng dạng dict
+    scopes=['https://www.googleapis.com/auth/drive']
+)
+
+drive_service = build('drive', 'v3', credentials=credentials)
 
 # --- Drive DB Sync Helpers ---
 def find_or_create_db_file(drive_service, filename, folder_id=None):
